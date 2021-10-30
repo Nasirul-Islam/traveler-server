@@ -30,7 +30,10 @@ async function run() {
         })
         //GET API
         app.get('/myorder', async (req, res) => {
-            const orders = ordercollection.find({});
+            console.log(req.query.search);
+            const orders = ordercollection.find({
+                email: { $regex: req.query.search },
+            });
             const myorders = await orders.toArray();
             res.send(myorders);
         })
