@@ -30,22 +30,27 @@ async function run() {
         })
         //GET API
         app.get('/myorder', async (req, res) => {
-            console.log(req.query.search);
             const orders = ordercollection.find({
                 email: { $regex: req.query.search },
             });
             const myorders = await orders.toArray();
             res.send(myorders);
         })
-
         // POST API
         app.post('/addorder', async (req, res) => {
             const order = req.body
-            console.log(order);
             const result = await ordercollection.insertOne(order);
-            console.log(result);
             res.json(result);
         });
+        // DELETE API
+        app.delete('/cancelorder/:id', async (req, res) => {
+            const item = req.params.id;
+            const result = await ordercollection.deleteOne({
+                purchaseId: { $regex: req.params.id },
+            })
+            res.send(result);
+            console.log(result);
+        })
     }
     finally {
         // await client.close();
