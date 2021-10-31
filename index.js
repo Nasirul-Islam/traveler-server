@@ -19,6 +19,7 @@ async function run() {
         await client.connect();
         const database = client.db("traveler");
         const servicescollection = database.collection("services");
+        const newservicescollection = database.collection("newservices");
         const ordercollection = database.collection("order");
         console.log('connect to database')
 
@@ -29,12 +30,24 @@ async function run() {
             res.send(result);
         })
         //GET API
+        app.get('/allorder', async (req, res) => {
+            const allorder = ordercollection.find({});
+            const result = await allorder.toArray();
+            res.send(result);
+        })
+        //GET API
         app.get('/myorder', async (req, res) => {
             const orders = ordercollection.find({
                 email: { $regex: req.query.search },
             });
             const myorders = await orders.toArray();
             res.send(myorders);
+        })
+        // POST API
+        app.post('/addservices', (req, res) => {
+            const service = req.body
+            const result = await newservicescollection.insertOne(service);
+            res.json(result);
         })
         // POST API
         app.post('/addorder', async (req, res) => {
