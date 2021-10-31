@@ -62,6 +62,20 @@ async function run() {
             const result = await ordercollection.insertOne(order);
             res.json(result);
         });
+        // UPDATE API
+        app.put('/confirmorder/:id', async (req, res) => {
+            const Id = req.params.id
+            const order = req.body
+            const filter = { purchaseId: { $regex: req.params.id }, };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: order.status
+                },
+            };
+            const result = await ordercollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
         // DELETE API
         app.delete('/cancelorder/:id', async (req, res) => {
             const item = req.params.id;
