@@ -43,9 +43,16 @@ async function run() {
             const myorders = await orders.toArray();
             res.send(myorders);
         })
+        //GET API
+        app.get('/newservices', async (req, res) => {
+            const newservices = newservicescollection.find({});
+            const result = await newservices.toArray();
+            res.send(result);
+        })
         // POST API
-        app.post('/addservices', (req, res) => {
+        app.post('/addservices', async (req, res) => {
             const service = req.body
+            console.log(service);
             const result = await newservicescollection.insertOne(service);
             res.json(result);
         })
@@ -63,7 +70,7 @@ async function run() {
             })
             res.send(result);
             console.log(result);
-        })
+        });
     }
     finally {
         // await client.close();
